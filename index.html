@@ -1,0 +1,2405 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$CLIVE - To The Moon!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        secondary: '#6BBFFF',
+                        accent: '#FF9F64',
+                        background: {
+                            light: '#FFFFFF',
+                            dark: '#181818'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['system-ui', 'sans-serif'],
+                        body: ['system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Enable smooth scrolling behavior for the entire document */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px; /* Add padding to account for fixed navbar */
+        }
+        
+        /* Text shadow for better readability */
+        .text-shadow-subtle {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .text-shadow-subtle {
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Cartoon background and clouds styling */
+        .cartoon-sky {
+            background-image: linear-gradient(to bottom, #87CEEB, #CFECFD);
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        .dark .cartoon-sky {
+            background-image: linear-gradient(to bottom, #0B2447, #19376D);
+        }
+        
+        /* Cloud animations */
+        @keyframes floatSlow {
+            0%, 100% { 
+                transform: translateX(0) translateY(0);
+            }
+            25% {
+                transform: translateX(5px) translateY(-5px);
+            }
+            50% {
+                transform: translateX(10px) translateY(0px);
+            }
+            75% {
+                transform: translateX(5px) translateY(5px);
+            }
+        }
+
+        @keyframes floatMedium {
+            0%, 100% { 
+                transform: translateX(0) translateY(0);
+            }
+            25% {
+                transform: translateX(-5px) translateY(5px);
+            }
+            50% {
+                transform: translateX(-10px) translateY(0px);
+            }
+            75% {
+                transform: translateX(-5px) translateY(-5px);
+            }
+        }
+
+        @keyframes floatFast {
+            0%, 100% { 
+                transform: translateX(0) translateY(0);
+            }
+            33% {
+                transform: translateX(-8px) translateY(-3px);
+            }
+            66% {
+                transform: translateX(8px) translateY(3px);
+            }
+        }
+        
+        /* Background cloud elements */
+        .bg-cloud {
+            position: absolute;
+            z-index: 0;
+            filter: blur(1px);
+            opacity: 0.8;
+        }
+        
+        .dark .bg-cloud {
+            filter: blur(1px) brightness(0.7);
+            opacity: 0.5;
+        }
+        
+        .cloud-1 {
+            width: 200px;
+            height: auto;
+            top: 15%;
+            left: 10%;
+            animation: floatSlow 70s infinite ease-in-out;
+        }
+        
+        .cloud-2 {
+            width: 250px;
+            height: auto;
+            top: 35%;
+            right: 5%;
+            animation: floatMedium 80s infinite ease-in-out;
+        }
+        
+        .cloud-3 {
+            width: 180px;
+            height: auto;
+            top: 60%;
+            left: 20%;
+            animation: floatFast 65s infinite ease-in-out;
+        }
+        
+        .cloud-4 {
+            width: 220px;
+            height: auto;
+            top: 75%;
+            right: 15%;
+            animation: floatSlow 90s infinite ease-in-out;
+        }
+        
+        .cloud-5 {
+            width: 150px;
+            height: auto;
+            top: 10%;
+            right: 25%;
+            animation: floatMedium 75s infinite ease-in-out;
+        }
+        
+        /* Make sure content stays above background */
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Add animation for navbar effects */
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+        
+        /* Floating navigation styles */
+        .floating-nav {
+            transition: transform 0.5s ease;
+        }
+        
+        .floating-nav:hover {
+            transform: translateY(-5px);
+        }
+        
+        .nav-bg {
+            box-shadow: 0 4px 20px rgba(93, 92, 222, 0.2);
+        }
+        
+        .nav-item {
+            color: #5D5CDE;
+        }
+        
+        .dark .nav-item {
+            color: #6BBFFF;
+        }
+        
+        /* Mobile navigation styling */
+        .mobile-nav-item {
+            position: relative;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-nav-item:hover {
+            transform: translateY(-3px);
+        }
+        
+        .mobile-nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, #5D5CDE, #6BBFFF);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: right;
+        }
+        
+        .mobile-nav-item:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        
+        /* Banner animation */
+        .banner-wrapper {
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            padding: 12px 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 50;
+        }
+        
+        .dark .banner-wrapper {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .banner-track {
+            display: flex;
+            width: fit-content;
+            animation: banner-scroll 30s linear infinite;
+            will-change: transform;
+        }
+        
+        @keyframes banner-scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+        
+        .banner-item {
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            white-space: nowrap;
+        }
+        
+        /* Optimization for high-performance animations */
+        .hardware-accelerated {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+        
+        .clive-image-container {
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .clive-image-container:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        /* Hot Air Balloon animation */
+        .balloon-container {
+            position: fixed;
+            z-index: 0; /* Reduced z-index to place balloon behind content */
+            transform-origin: center bottom;
+            animation: balloon-float-x 53s ease-in-out infinite, 
+                       balloon-float-y 18s ease-in-out infinite,
+                       balloon-rotate 12s ease-in-out infinite;
+            margin-left: -50px;
+            margin-right: -50px;
+            pointer-events: none;
+        }
+
+        @keyframes balloon-float-x {
+            0% {
+                left: -5%;
+            }
+            50% {
+                left: 95%;
+            }
+            100% {
+                left: -5%;
+            }
+        }
+
+        @keyframes balloon-float-y {
+            0% {
+                top: 15vh;
+            }
+            25% {
+                top: 18vh;
+            }
+            50% {
+                top: 12vh;
+            }
+            75% {
+                top: 20vh;
+            }
+            100% {
+                top: 15vh;
+            }
+        }
+
+        @keyframes balloon-rotate {
+            0% {
+                transform: rotate(-3deg);
+            }
+            33% {
+                transform: rotate(3deg);
+            }
+            66% {
+                transform: rotate(-2deg);
+            }
+            100% {
+                transform: rotate(-3deg);
+            }
+        }
+        
+        /* Main content container - ensures content appears above balloon */
+        .content-container {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Cloud Styling */
+        .cloud-wrapper {
+            position: relative;
+            width: 340px;
+            height: 190px;
+            margin: 40px auto;
+            transition: transform 0.3s ease;
+        }
+        
+        .cloud-wrapper:hover {
+            transform: translateY(-8px);
+        }
+        
+        .cartoon-cloud {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        @keyframes floatCloud {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .cloud-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Adding animation to both the cloud and its content together */
+        .float-1 .cloud-container { animation: floatCloud 4s ease-in-out infinite; }
+        .float-2 .cloud-container { animation: floatCloud 4.5s ease-in-out infinite; animation-delay: 0.3s; }
+        .float-3 .cloud-container { animation: floatCloud 5s ease-in-out infinite; animation-delay: 0.7s; }
+        .float-4 .cloud-container { animation: floatCloud 5.5s ease-in-out infinite; animation-delay: 1s; }
+        .float-5 .cloud-container { animation: floatCloud 6s ease-in-out infinite; animation-delay: 0.5s; }
+        .float-6 .cloud-container { animation: floatCloud 6.5s ease-in-out infinite; animation-delay: 0.2s; }
+        
+        .cloud-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 1;
+            pointer-events: none;
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .cloud-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            background-image: linear-gradient(to right, #5D5CDE, #6BBFFF); 
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        .cloud-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            background-image: linear-gradient(to right, #5D5CDE, #6BBFFF);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        /* Sky Blast Game Styles */
+        #gameCanvas {
+            background: linear-gradient(to bottom, #64b5f6, #bbdefb);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            touch-action: none;
+            cursor: pointer;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .dark #gameCanvas {
+            background: linear-gradient(to bottom, #1a237e, #3949ab);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-section {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .game-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .game-button {
+            background: linear-gradient(to right, #5D5CDE, #6BBFFF);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            box-shadow: 0 4px 12px rgba(93, 92, 222, 0.3);
+        }
+        
+        .game-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .game-button:active {
+            transform: translateY(0);
+            opacity: 0.9;
+        }
+        
+        /* Game Score Board (horizontal) */
+        .game-scoreboard {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .dark .game-scoreboard {
+            background: rgba(0, 0, 0, 0.4);
+        }
+        
+        .score-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #5D5CDE;
+            margin-top: 0.1rem;
+        }
+        
+        .dark .score-value {
+            color: #6BBFFF;
+        }
+        
+        .instructions {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            max-width: 640px;
+            text-align: center;
+        }
+        
+        .dark .instructions {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 640px) {
+            #gameCanvas {
+                width: 100%;
+                height: auto;
+            }
+            
+            .score-item span:first-child {
+                font-size: 0.875rem;
+            }
+            
+            .score-value {
+                font-size: 1.25rem;
+            }
+        }
+        
+        /* Score Card Modal Styles */
+        .score-card-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            transition: opacity 0.3s, visibility 0.3s;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .score-card-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .score-card-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            transform: scale(0.95);
+            transition: transform 0.3s;
+            margin: 0 1rem;
+        }
+        
+        .score-card-modal.active .score-card-container {
+            transform: scale(1);
+        }
+        
+        .score-card {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1.5 / 1;
+            background: linear-gradient(135deg, #5D5CDE, #6BBFFF);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            color: white;
+            padding: 1.5rem;
+        }
+        
+        .dark .score-card {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        .score-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://pfst.cf2.poecdn.net/base/image/8362e5b99e2336274cb8bc21de4a7a258a52b2021c882b179db7e9763372db35') no-repeat;
+            background-size: 35%;
+            background-position: 95% 90%;
+            opacity: 0.2;
+            z-index: 0;
+        }
+        
+        .score-card-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .score-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .score-card-logo {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 1rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .score-card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .score-card-stats {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .score-card-stat {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .score-card-stat-icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+        
+        .score-card-stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-right: 0.5rem;
+        }
+        
+        .score-card-stat-value {
+            font-size: 1.25rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        
+        .score-card-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+        
+        .score-card-date {
+            font-style: italic;
+        }
+        
+        .score-card-actions {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .score-card-button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .score-card-button.primary {
+            background-color: white;
+            color: #5D5CDE;
+        }
+        
+        .score-card-button.secondary {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .score-card-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .score-card-button:active {
+            transform: translateY(0);
+        }
+        
+        .score-card-button svg {
+            margin-right: 0.5rem;
+        }
+        
+        @media (max-width: 480px) {
+            .score-card {
+                padding: 1rem;
+            }
+            
+            .score-card-title {
+                font-size: 1.25rem;
+            }
+            
+            .score-card-logo {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .score-card-stat-value {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body class="font-body text-gray-800 dark:text-gray-200 cartoon-sky min-h-screen overflow-x-hidden">
+    <!-- Background cartoon clouds -->
+    <!-- Empty div to maintain structure without clouds -->
+    <div class="absolute inset-0 w-full h-full pointer-events-none" style="position: absolute; min-height: 100vh;">
+        <!-- No clouds -->
+    </div>
+    
+    <!-- Background Balloon (Fixed Version) -->
+    <div class="balloon-container w-[307px] sm:w-[461px] md:w-[614px]" style="position: fixed; z-index: 1;">
+        <img src="https://pfst.cf2.poecdn.net/base/image/8362e5b99e2336274cb8bc21de4a7a258a52b2021c882b179db7e9763372db35" alt="Clive and Phin in hot air balloon" class="w-full h-auto">
+    </div>
+
+    <!-- Main content wrapper with higher z-index -->
+    <div class="content-container">
+        <!-- Navigation Bar (Fixed with scroll animation) - Improved Spacing & Symmetry -->
+        <nav id="navbar" class="fixed top-0 left-0 right-0 w-full z-50 py-3 bg-white/50 backdrop-blur-sm dark:bg-gray-800/50 transition-transform duration-300">
+            <div class="container mx-auto px-4">
+                <!-- Three-column layout for perfect symmetry -->
+                <div class="grid grid-cols-3 items-center">
+                    <!-- Left column: Buy Button (Mobile) and Logo (Desktop) -->
+                    <div class="col-span-1">
+                        <!-- Mobile Buy Button (Left) -->
+                        <div class="md:hidden flex items-center justify-start ml-1">
+                            <a href="https://relay.link/abstract" class="flex items-center justify-center px-2 py-1 rounded-full bg-green-600 text-white font-bold text-xs transition-transform hover:scale-105 active:scale-95 shadow-md" target="_blank" rel="noopener noreferrer">
+                                <svg class="h-3 w-3 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="white" stroke-width="2" fill="#1c7636"></path>
+                                    <path d="M7 12H17M17 12L13 8M17 12L13 16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                <span>Buy $CLIVE</span>
+                            </a>
+                        </div>
+                        
+                        <!-- Desktop Logo (Hidden on mobile) -->
+                        <div class="hidden md:flex items-center justify-start">
+                            <div class="flex items-center gap-2">
+                                <div class="clive-icon-container w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                    <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="w-8 h-8 object-contain rounded-full shadow-sm">
+                                </div>
+                                <div class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                                    $CLIVE
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Middle column: Mobile Logo (Centered) and Desktop Navigation -->
+                    <div class="col-span-1 flex justify-center items-center">
+                        <!-- Desktop Navigation Menu (Hidden on Mobile) -->
+                        <div class="hidden md:block">
+                            <!-- Navigation items container -->
+                            <div class="flex items-center justify-center bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg rounded-full p-2 shadow-lg border border-white/20 dark:border-gray-700/20 space-x-2">
+                                <!-- About link -->
+                                <a href="#about" onclick="scrollToSection('about')" class="nav-link flex items-center px-3 py-2 rounded-full bg-white/80 dark:bg-gray-700/80 text-primary dark:text-secondary hover:bg-primary/10 transition duration-200" style="cursor:pointer !important;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>About</span>
+                                </a>
+                                
+                                <!-- Play Game link -->
+                                <a href="#play" onclick="scrollToSection('play')" class="nav-link flex items-center px-3 py-2 rounded-full bg-white/80 dark:bg-gray-700/80 text-primary dark:text-secondary hover:bg-primary/10 transition duration-200" style="cursor:pointer !important;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Play</span>
+                                </a>
+                                
+                                <!-- How to Buy link -->
+                                <a href="#how-to-buy" onclick="scrollToSection('how-to-buy')" class="nav-link flex items-center px-3 py-2 rounded-full bg-white/80 dark:bg-gray-700/80 text-primary dark:text-secondary hover:bg-primary/10 transition duration-200" style="cursor:pointer !important;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path>
+                                        <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Buy</span>
+                                </a>
+                                
+                                <!-- Tokenomics link -->
+                                <a href="#tokenomics" onclick="scrollToSection('tokenomics')" class="nav-link flex items-center px-3 py-2 rounded-full bg-white/80 dark:bg-gray-700/80 text-primary dark:text-secondary hover:bg-primary/10 transition duration-200" style="cursor:pointer !important;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
+                                        <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
+                                    </svg>
+                                    <span>Tokenomics</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Mobile Logo (Perfectly Centered) -->
+                        <div class="md:hidden flex items-center justify-center">
+                            <div class="flex items-center gap-2">
+                                <div class="clive-icon-container w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                    <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="w-8 h-8 object-contain rounded-full shadow-sm">
+                                </div>
+                                <div class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                                    $CLIVE
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right column: Action buttons -->
+                    <div class="flex items-center justify-end space-x-2 sm:space-x-3">
+                        <!-- Theme Toggle Button (Desktop only) -->
+                        <button id="theme-toggle-desktop" class="hidden md:block p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Desktop-only Buy Button -->
+                        <a href="https://relay.link/abstract" class="hidden md:flex relative items-center justify-center px-4 py-2 rounded-full bg-green-600 text-white font-bold text-sm transition-transform hover:scale-105 active:scale-95 shadow-md" target="_blank" rel="noopener noreferrer">
+                            <div class="absolute left-3">
+                                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="white" stroke-width="2" fill="#1c7636"></path>
+                                    <path d="M7 12H17M17 12L13 8M17 12L13 16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </div>
+                            <div class="flex flex-col items-center ml-4">
+                                <span class="leading-tight">Buy</span>
+                                <span class="leading-tight">$CLIVE</span>
+                            </div>
+                        </a>
+                        
+                        <!-- Mobile Controls: Theme Toggle and Menu only -->
+                        <div class="flex md:hidden items-center space-x-3">
+                            <!-- Theme Toggle (Mobile) -->
+                            <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                                </svg>
+                            </button>
+                            
+                            <!-- Mobile Menu Toggle -->
+                            <button id="menu-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Mobile Navigation Menu (Hidden by default) -->
+        <div id="mobile-menu" class="fixed inset-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg z-[9999] transform translate-x-full transition-transform duration-300 ease-in-out">
+            <div class="relative flex flex-col items-center justify-center h-full space-y-8 z-[10000]">
+                <button id="close-menu" class="absolute top-5 right-5 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                
+                <a href="#about" class="nav-scroll-link mobile-nav-item text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">About</a>
+                <a href="#how-to-buy" class="nav-scroll-link mobile-nav-item text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">How to Buy</a>
+                <a href="#tokenomics" class="nav-scroll-link mobile-nav-item text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Tokenomics</a>
+                <a href="#play" class="nav-scroll-link mobile-nav-item text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Play Game</a>
+            </div>
+        </div>
+
+        <!-- No spacer needed since navbar is no longer fixed -->
+
+        <!-- Hero Section -->
+        <section class="relative min-h-[calc(100vh-5rem)] flex flex-col items-center justify-center text-center px-6 pt-12 pb-32 z-5">
+            <!-- Text with organic glass backdrops that wrap around each text element -->
+            <div class="flex flex-col items-center justify-center gap-5 max-w-4xl mx-auto">
+                <!-- Title with text-wrapping backdrop -->
+                <h1 class="inline-block text-center">
+                    <span class="inline-block text-4xl sm:text-5xl md:text-6xl font-bold leading-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent text-shadow-subtle px-6 py-3 backdrop-blur-md bg-white/30 dark:bg-gray-900/40 border border-white/20 dark:border-gray-800/30 shadow-lg rounded-full mb-3">
+                        Meet Clive &amp; Phin
+                    </span>
+                    <br>
+                    <span class="inline-block text-4xl sm:text-5xl md:text-6xl font-bold leading-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent text-shadow-subtle px-6 py-3 backdrop-blur-md bg-white/30 dark:bg-gray-900/40 border border-white/20 dark:border-gray-800/30 shadow-lg rounded-full">
+                        Your New Favorite Meme Coin
+                    </span>
+                </h1>
+                
+                <!-- Subheading with text-wrapping backdrop -->
+                <p class="text-center inline-block">
+                    <span class="inline-block text-lg sm:text-xl md:text-2xl text-gray-700 dark:text-gray-200 text-shadow-subtle px-6 py-3 backdrop-blur-md bg-white/30 dark:bg-gray-900/40 border border-white/20 dark:border-gray-800/30 shadow-md rounded-full">
+                        Join Clive and Phin on their journey to the moon!
+                    </span>
+                </p>
+            </div>
+
+            <!-- Extra spacing div -->
+            <div class="h-12 md:h-16"></div>
+
+            <!-- Contract Address Card - Enhanced with Animations (Fixed Blur Issue) -->
+            <div class="relative w-full max-w-lg rounded-xl p-5 mb-10 bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm border border-white/50 dark:border-gray-700/50 hover:shadow-lg transition-shadow duration-300 group overflow-hidden">
+                <!-- Animated background glow effect on hover -->
+                <div class="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-secondary/0 dark:from-primary/5 dark:via-primary/25 dark:to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                
+                <h3 class="text-xl sm:text-2xl font-bold mb-3 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent will-change-auto">Contract Address</h3>
+                
+                <div class="flex items-center bg-white/70 dark:bg-gray-900/70 rounded-lg p-2 overflow-hidden group-hover:shadow-md transition-shadow duration-300">
+                    <code id="contract-address" class="flex-1 font-mono text-base sm:text-lg truncate pr-2 text-gray-800 dark:text-gray-200 font-semibold">0x80CFbd730D55E27daAc3D5676AD0d61D44089e17</code>
+                    <button id="copy-address" class="p-2 rounded-lg bg-primary/10 hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors group/btn">
+                        <svg id="copy-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary dark:text-secondary transition-transform group-hover/btn:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                        <svg id="copied-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Animated success tooltip -->
+                <div id="copy-tooltip" class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-primary to-secondary text-white text-sm py-1.5 px-4 rounded-full opacity-0 scale-90 transition-all duration-300 shadow-lg">
+                    <span class="inline-flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Address Copied!
+                    </span>
+                </div>
+            </div>
+
+            <!-- Social Links -->
+            <div class="flex justify-center space-x-6 mb-10 relative z-20">
+                <!-- Telegram Icon (Enlarged) -->
+                <a href="https://t.me/cliveabs" onclick="window.open('https://t.me/cliveabs', '_blank')" class="social-link p-2 rounded-full bg-[#26A5E4] text-white hover:bg-[#0088cc] transition-transform hover:scale-110 flex items-center justify-center w-12 h-12 cursor-pointer relative z-20" target="_blank" rel="noopener noreferrer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path>
+                    </svg>
+                </a>
+                
+                <!-- X (Twitter) Icon -->
+                <a href="https://x.com/cliveonabs" onclick="window.open('https://x.com/cliveonabs', '_blank')" class="social-link p-2 rounded-full bg-black text-white hover:bg-[#111111] transition-transform hover:scale-110 flex items-center justify-center w-12 h-12 cursor-pointer relative z-20" target="_blank" rel="noopener noreferrer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path>
+                    </svg>
+                </a>
+                
+                <!-- Dexscreener Icon (Using actual logo image with matching background) -->
+                <a href="https://dexscreener.com/abstract/0x173e4b576f29d09bdf97cf7b4d5a869a9ee69b7b" onclick="window.open('https://dexscreener.com/abstract/0x173e4b576f29d09bdf97cf7b4d5a869a9ee69b7b', '_blank')" class="social-link p-2 rounded-full bg-black text-white hover:bg-[#111111] transition-transform hover:scale-110 flex items-center justify-center w-12 h-12 cursor-pointer relative z-20" target="_blank" rel="noopener noreferrer">
+                    <img src="https://pfst.cf2.poecdn.net/base/image/42b7a0f8bd8c6532220831f02c7f7c604cc1b194378384609c909e98149668a0?w=512&amp;h=512" alt="Dexscreener" class="h-8 w-8 object-contain pointer-events-none">
+                </a>
+            </div>
+
+            <!-- CTA Button -->
+            <a href="https://relay.link/abstract" class="inline-block px-8 py-4 rounded-full bg-green-600 text-white font-bold text-lg mb-10 hover:bg-green-700 transition-transform hover:scale-105 active:scale-95 shadow-lg" target="_blank" rel="noopener noreferrer">
+                Buy $CLIVE Now
+            </a>
+        </section>
+        
+        <!-- About Section with Faint Glass Backdrop -->
+        <section id="about" class="py-16 px-6">
+            <div class="max-w-4xl mx-auto">
+                <!-- Title with glass-style backdrop -->
+                <div class="flex justify-center w-full mb-10">
+                    <h2 class="inline-block text-center">
+                        <span class="inline-block text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent text-shadow-subtle px-6 py-3 backdrop-blur-md bg-white/30 dark:bg-gray-900/40 border border-white/20 dark:border-gray-800/30 shadow-lg rounded-full">
+                            The Story of Clive &amp; Phin
+                        </span>
+                    </h2>
+                </div>
+                
+                <!-- Content with faint glass backdrop that allows the balloon to be visible behind it -->
+                <div class="relative rounded-xl overflow-hidden backdrop-blur-sm bg-white/20 dark:bg-gray-900/20 border border-white/30 dark:border-gray-700/20 shadow-lg p-8">
+                    <!-- Semi-transparent glass effect that allows balloon visibility -->
+                    <div class="text-center relative z-10">
+                        <p class="text-lg mb-5 text-gray-800 dark:text-gray-200 font-medium text-shadow-subtle">
+                            Once upon a time in the crypto realm, there was a cat named Clive who belonged to Phin. Clive dreamed of reaching the moon alongside his owner.
+                        </p>
+                        <p class="text-lg mb-5 text-gray-800 dark:text-gray-200 font-medium text-shadow-subtle">
+                            Clive was an extraordinary cat with big ambitions. While other cats were busy chasing laser pointers, Clive was helping Phin study chart patterns and market trends.
+                        </p>
+                        <p class="text-lg mb-5 text-gray-800 dark:text-gray-200 font-medium text-shadow-subtle">
+                            Phin was a wise pudgy penguin known for his magical trading abilities. He wore a wizard's hat and special glasses that could see future pumps, and Clive was always by his side.
+                        </p>
+                        <p class="text-lg text-gray-800 dark:text-gray-200 font-medium text-shadow-subtle">
+                            And thus, $CLIVE was born - the memecoin that combines Clive's determination with Phin's wisdom. Now they travel together in their sky balloon, inviting everyone to join their journey to the moon!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Sky Blast Game Section -->
+        <section id="play" class="py-16 px-6">
+            <div class="max-w-4xl mx-auto">
+                <!-- Title with glass-style backdrop matching hero section - properly centered -->
+                <div class="flex justify-center w-full mb-10">
+                    <h2 class="inline-block text-center">
+                        <span class="inline-block text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent text-shadow-subtle px-6 py-3 backdrop-blur-md bg-white/30 dark:bg-gray-900/40 border border-white/20 dark:border-gray-800/30 shadow-lg rounded-full">
+                            Sky Blast Game
+                        </span>
+                    </h2>
+                </div>
+                
+                <!-- Description with matching glass-style backdrop -->
+                <div class="text-center mb-10">
+                    <p class="inline-block text-lg text-gray-700 dark:text-gray-200 text-shadow-subtle px-6 py-3 backdrop-blur-md bg-white/30 dark:bg-gray-900/40 border border-white/20 dark:border-gray-800/30 shadow-md rounded-full max-w-2xl">
+                        Help Clive &amp; Phin collect stars on their journey to the moon! 
+                        Avoid the clouds and see how high you can go!
+                    </p>
+                </div>
+                
+                <div class="game-section">
+                    <!-- Game Container -->
+                    <div class="w-full max-w-3xl mx-auto">
+                        <!-- Scoreboard -->
+                        <div class="game-scoreboard">
+                            <div class="score-item">
+                                <span class="text-sm opacity-80">Score</span>
+                                <span id="score" class="score-value">0</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="text-sm opacity-80">High Score</span>
+                                <span id="highScore" class="score-value">0</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="text-sm opacity-80">Stars</span>
+                                <span id="stars" class="score-value">0</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="text-sm opacity-80">Player</span>
+                                <span id="playerName" class="score-value text-base truncate max-w-[100px]">Player</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Game Canvas -->
+                        <canvas id="gameCanvas" width="800" height="600" class="w-full"></canvas>
+                        
+                        <!-- Game Controls -->
+                        <div class="game-controls mt-4">
+                            <button id="startButton" class="game-button">Start Game</button>
+                            <button id="restartButton" class="game-button" disabled="">Restart</button>
+                            <button id="changeNameButton" class="game-button bg-gradient-to-r from-secondary to-primary">Change Name</button>
+                            <button id="shareScoreButton" class="game-button bg-gradient-to-r from-purple-500 to-pink-500" disabled="">Share Score</button>
+                        </div>
+                    </div>
+                    
+                    <div class="instructions mt-6 max-w-3xl mx-auto">
+                        <p>Use arrow keys or swipe to navigate Clive &amp; Phin's balloon. Collect stars to increase your score!</p>
+                        <p class="mt-2">On mobile: Swipe left or right to control the balloon's direction.</p>
+                        <p class="mt-2 text-primary dark:text-secondary font-semibold">Try to beat your own high score!</p>
+                    </div>
+                </div>
+                
+                <!-- Player Name Modal -->
+                <div id="nameModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] flex items-center justify-center transition-opacity duration-300 opacity-0 pointer-events-none">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 w-full max-w-md mx-4 transform transition-transform duration-300 scale-95">
+                        <h3 class="text-xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Enter Your Name</h3>
+                        <p class="text-gray-700 dark:text-gray-300 mb-4">Choose a display name for the game:</p>
+                        
+                        <input type="text" id="playerNameInput" maxlength="15" placeholder="Please enter your player name" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm text-gray-800 dark:text-gray-200 mb-4 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-secondary text-base">
+                        
+                        <div class="flex justify-end space-x-3">
+                            <button id="cancelNameButton" class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                                Cancel
+                            </button>
+                            <button id="saveNameButton" class="px-4 py-2 rounded-lg bg-gradient-to-r from-primary to-secondary text-white font-medium hover:opacity-90 transition-opacity">
+                                Save Name
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Score Card Modal -->
+                <div id="scoreCardModal" class="score-card-modal">
+                    <div class="score-card-container">
+                        <!-- Score Card -->
+                        <div class="score-card">
+                            <div class="score-card-content">
+                                <!-- Header -->
+                                <div class="score-card-header">
+                                    <div class="score-card-logo">
+                                        <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9" alt="Clive Logo" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="score-card-title">Sky Blast Score Card</div>
+                                </div>
+                                
+                                <!-- Stats -->
+                                <div class="score-card-stats">
+                                    <!-- Player Name -->
+                                    <div class="score-card-stat">
+                                        <div class="score-card-stat-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="white">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="score-card-stat-label">Player:</div>
+                                        <div id="scoreCardPlayerName" class="score-card-stat-value">Player</div>
+                                    </div>
+                                    
+                                    <!-- Score -->
+                                    <div class="score-card-stat">
+                                        <div class="score-card-stat-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="white">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="score-card-stat-label">Score:</div>
+                                        <div id="scoreCardScore" class="score-card-stat-value">0</div>
+                                    </div>
+                                    
+                                    <!-- Stars Collected -->
+                                    <div class="score-card-stat">
+                                        <div class="score-card-stat-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="white">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="score-card-stat-label">Stars:</div>
+                                        <div id="scoreCardStars" class="score-card-stat-value">0</div>
+                                    </div>
+                                    
+                                    <!-- High Score -->
+                                    <div class="score-card-stat">
+                                        <div class="score-card-stat-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="white">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="score-card-stat-label">High Score:</div>
+                                        <div id="scoreCardHighScore" class="score-card-stat-value">0</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Footer -->
+                                <div class="score-card-footer">
+                                    <div class="score-card-date" id="scoreCardDate">May 20, 2024</div>
+                                    <div>$CLIVE Sky Blast</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="score-card-actions">
+                            <button id="copyScoreCard" class="score-card-button primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                </svg>
+                                <span id="copyButtonText">Copy to Clipboard</span>
+                            </button>
+                            <button id="closeScoreCard" class="score-card-button secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                Close
+                            </button>
+                        </div>
+                        <!-- Copy Success Message -->
+                        <div id="copySuccessMessage" class="fixed top-6 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Score card copied to clipboard!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- How to Buy Section -->
+        <section id="how-to-buy" class="py-16 px-6">
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-10 text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    How to Buy $CLIVE
+                </h2>
+                <p class="text-lg text-center max-w-2xl mx-auto mb-12">
+                    Ready to join Clive and Phin on their journey to the moon? Follow these simple steps to get your $CLIVE tokens!
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
+                    <!-- Step 1: Setup Your Wallet -->
+                    <div class="relative bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-xl p-6 shadow-lg border border-white/30 dark:border-gray-700/30 overflow-hidden group hover:shadow-xl transition-all duration-300">
+                        <div class="absolute inset-0 opacity-25 group-hover:opacity-35 transition-opacity duration-300">
+                            <img src="https://pfst.cf2.poecdn.net/base/image/dea7ba4ea118f4897f19dcfbf1659d83817026e0b82059793de2f80523e68bee?w=3000&amp;h=3000" alt="Clive and Phin in snow" class="w-full h-full object-cover">
+                        </div>
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary/40 backdrop-blur-md mb-4 shadow-sm">
+                                <span class="text-xl font-bold text-primary dark:text-secondary">1</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent drop-shadow-md">Setup Your Wallet</h3>
+                            <ul class="list-disc pl-5 space-y-2 text-gray-900 dark:text-gray-100 font-semibold text-shadow-subtle">
+                                <li>Download and install a compatible Abstract wallet (Abstract Global, etc.)</li>
+                                <li>Create a new wallet or import your existing one</li>
+                                <li>Make sure to securely back up your seed phrase</li>
+                                <li>Configure your wallet settings for optimal security</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Fund Your Wallet -->
+                    <div class="relative bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-xl p-6 shadow-lg border border-white/30 dark:border-gray-700/30 overflow-hidden group hover:shadow-xl transition-all duration-300">
+                        <div class="absolute inset-0 opacity-25 group-hover:opacity-35 transition-opacity duration-300">
+                            <img src="https://pfst.cf2.poecdn.net/base/image/f9db908d2c512f7f386bedb71a6a5bbc3d631a902881b78dfbb5b1e7b965777f?w=1080&amp;h=1080" alt="Clive and Phin at home" class="w-full h-full object-cover">
+                        </div>
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary/40 backdrop-blur-md mb-4 shadow-sm">
+                                <span class="text-xl font-bold text-primary dark:text-secondary">2</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent drop-shadow-md">Fund Your Wallet</h3>
+                            <ul class="list-disc pl-5 space-y-2 text-gray-900 dark:text-gray-100 font-semibold text-shadow-subtle">
+                                <li>Transfer ETH to your wallet from an exchange or another wallet</li>
+                                <li>Ensure you have enough ETH for the purchase and gas fees</li>
+                                <li>Double-check all transaction details before confirming</li>
+                                <li>Wait for the transaction to complete (usually takes a few minutes)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3: Bridge to Abstract ETH -->
+                    <div class="relative bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-xl p-6 shadow-lg border border-white/30 dark:border-gray-700/30 overflow-hidden group hover:shadow-xl transition-all duration-300">
+                        <div class="absolute inset-0 opacity-25 group-hover:opacity-35 transition-opacity duration-300">
+                            <img src="https://pfst.cf2.poecdn.net/base/image/f8c26bfe2c11e46260082041c3c9ed66c07438f54cc1d19a92088f33abe79db8?w=3000&amp;h=3000" alt="Clive and Phin on sled" class="w-full h-full object-cover">
+                        </div>
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary/40 backdrop-blur-md mb-4 shadow-sm">
+                                <span class="text-xl font-bold text-primary dark:text-secondary">3</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent drop-shadow-md">Bridge to Abstract ETH</h3>
+                            <ul class="list-disc pl-5 space-y-2 text-gray-900 dark:text-gray-100 font-semibold text-shadow-subtle">
+                                <li>Navigate to the Abstract Bridge in your wallet</li>
+                                <li>Select ETH as your source token and Abstract ETH as the destination</li>
+                                <li>Enter the amount you wish to bridge</li>
+                                <li>Confirm the transaction and wait for it to complete</li>
+                                <li>Verify that the Abstract ETH appears in your wallet</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 4: Swap for $CLIVE -->
+                    <div class="relative bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-xl p-6 shadow-lg border border-white/30 dark:border-gray-700/30 overflow-hidden group hover:shadow-xl transition-all duration-300">
+                        <div class="absolute inset-0 opacity-25 group-hover:opacity-35 transition-opacity duration-300">
+                            <img src="https://pfst.cf2.poecdn.net/base/image/bdfb8db5ba184679e3fc4bc503e81735744c8463f128b5c594eaf6890c22fea4?w=1280&amp;h=1280" alt="Clive snowboarding" class="w-full h-full object-cover">
+                        </div>
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary/40 backdrop-blur-md mb-4 shadow-sm">
+                                <span class="text-xl font-bold text-primary dark:text-secondary">4</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent drop-shadow-md">Swap for $CLIVE</h3>
+                            <ul class="list-disc pl-5 space-y-2 text-gray-900 dark:text-gray-100 font-semibold text-shadow-subtle">
+                                <li>Open the Swap interface in your wallet</li>
+                                <li>Choose Abstract ETH as your input token</li>
+                                <li>Search for and select $CLIVE as your output token</li>
+                                <li>Enter the amount you wish to swap</li>
+                                <li>Review the transaction details, including fees</li>
+                                <li>Confirm the swap and wait for it to process</li>
+                                <li>Congratulations! You now own $CLIVE tokens 🎉</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Direct Buy Button -->
+                <div class="text-center">
+                    <a href="https://relay.link/abstract" class="inline-block px-8 py-4 rounded-full bg-green-600 text-white font-bold text-lg hover:bg-green-700 transition-transform hover:scale-105 active:scale-95 shadow-lg" target="_blank" rel="noopener noreferrer">
+                        Buy $CLIVE Now
+                    </a>
+                    <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                        Remember to always verify contract addresses and do your own research before investing.
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Tokenomics Section with Cartoon Clouds -->
+        <section id="tokenomics" class="py-16 px-6">
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-10 text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    Tokenomics
+                </h2>
+                <div class="flex flex-wrap justify-center">
+                    <!-- Ticker -->
+                    <div class="cloud-wrapper float-1">
+                        <div class="cloud-container">
+                            <img src="https://pfst.cf2.poecdn.net/base/image/ddd643b1950fd813ec9c85e351732c97e6e2f8ee4583bdc02f6a892310a5e6d4?w=1290&amp;h=858" alt="Cloud" class="cartoon-cloud">
+                            <div class="cloud-content">
+                                <div class="cloud-title">Ticker:</div>
+                                <div class="cloud-value">$CLIVE</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chain -->
+                    <div class="cloud-wrapper float-2">
+                        <div class="cloud-container">
+                            <img src="https://pfst.cf2.poecdn.net/base/image/ddd643b1950fd813ec9c85e351732c97e6e2f8ee4583bdc02f6a892310a5e6d4?w=1290&amp;h=858" alt="Cloud" class="cartoon-cloud">
+                            <div class="cloud-content">
+                                <div class="cloud-title">Chain:</div>
+                                <div class="cloud-value">Abstract</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Taxes -->
+                    <div class="cloud-wrapper float-3">
+                        <div class="cloud-container">
+                            <img src="https://pfst.cf2.poecdn.net/base/image/ddd643b1950fd813ec9c85e351732c97e6e2f8ee4583bdc02f6a892310a5e6d4?w=1290&amp;h=858" alt="Cloud" class="cartoon-cloud">
+                            <div class="cloud-content">
+                                <div class="cloud-title">Taxes:</div>
+                                <div class="cloud-value">No Taxes</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Liquidity -->
+                    <div class="cloud-wrapper float-4">
+                        <div class="cloud-container">
+                            <img src="https://pfst.cf2.poecdn.net/base/image/ddd643b1950fd813ec9c85e351732c97e6e2f8ee4583bdc02f6a892310a5e6d4?w=1290&amp;h=858" alt="Cloud" class="cartoon-cloud">
+                            <div class="cloud-content">
+                                <div class="cloud-title">Liquidity:</div>
+                                <div class="cloud-value">Locked</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Ownership -->
+                    <div class="cloud-wrapper float-5">
+                        <div class="cloud-container">
+                            <img src="https://pfst.cf2.poecdn.net/base/image/ddd643b1950fd813ec9c85e351732c97e6e2f8ee4583bdc02f6a892310a5e6d4?w=1290&amp;h=858" alt="Cloud" class="cartoon-cloud">
+                            <div class="cloud-content">
+                                <div class="cloud-title">Ownership:</div>
+                                <div class="cloud-value">Renounced</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Total Supply -->
+                    <div class="cloud-wrapper float-6">
+                        <div class="cloud-container">
+                            <img src="https://pfst.cf2.poecdn.net/base/image/ddd643b1950fd813ec9c85e351732c97e6e2f8ee4583bdc02f6a892310a5e6d4?w=1290&amp;h=858" alt="Cloud" class="cartoon-cloud">
+                            <div class="cloud-content">
+                                <div class="cloud-title">Total Supply:</div>
+                                <div class="cloud-value">1,000,000,000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Copyright and Design Credit Footer -->
+        <footer class="w-full py-4 bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm border-t border-white/20 dark:border-gray-700/20 mt-10 mb-20">
+            <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm text-gray-600 dark:text-gray-400 text-center md:text-left mb-2 md:mb-0">
+                    © 2025 $CLIVE. All rights reserved.
+                </p>
+                <p class="text-sm text-gray-500 dark:text-gray-500 text-center md:text-right">
+                    Designed by CLIVE team
+                </p>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Improved Infinite Sliding Banner (Fixed at bottom) -->
+    <div class="banner-wrapper">
+        <div class="banner-track hardware-accelerated">
+            <!-- First set of items -->
+            <div class="banner-item">
+                <div class="clive-image-container relative flex items-center justify-center ml-4 mr-3">
+                    <div class="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="h-12 w-12 object-contain rounded-full shadow-sm">
+                    </div>
+                </div>
+                <span class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mr-8">$CLIVE</span>
+            </div>
+            <div class="banner-item">
+                <div class="clive-image-container relative flex items-center justify-center ml-4 mr-3">
+                    <div class="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="h-12 w-12 object-contain rounded-full shadow-sm">
+                    </div>
+                </div>
+                <span class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mr-8">$CLIVE</span>
+            </div>
+            <div class="banner-item">
+                <div class="clive-image-container relative flex items-center justify-center ml-4 mr-3">
+                    <div class="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="h-12 w-12 object-contain rounded-full shadow-sm">
+                    </div>
+                </div>
+                <span class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mr-8">$CLIVE</span>
+            </div>
+            <div class="banner-item">
+                <div class="clive-image-container relative flex items-center justify-center ml-4 mr-3">
+                    <div class="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="h-12 w-12 object-contain rounded-full shadow-sm">
+                    </div>
+                </div>
+                <span class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mr-8">$CLIVE</span>
+            </div>
+            <div class="banner-item">
+                <div class="clive-image-container relative flex items-center justify-center ml-4 mr-3">
+                    <div class="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="h-12 w-12 object-contain rounded-full shadow-sm">
+                    </div>
+                </div>
+                <span class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mr-8">$CLIVE</span>
+            </div>
+            <div class="banner-item">
+                <div class="clive-image-container relative flex items-center justify-center ml-4 mr-3">
+                    <div class="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="h-12 w-12 object-contain rounded-full shadow-sm">
+                    </div>
+                </div>
+                <span class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mr-8">$CLIVE</span>
+            </div>
+            
+            <!-- Duplicated set for seamless looping -->
+            <div class="banner-item">
+                <div class="clive-image-container relative flex items-center justify-center ml-4 mr-3">
+                    <div class="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="h-12 w-12 object-contain rounded-full shadow-sm">
+                    </div>
+                </div>
+                <span class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mr-8">$CLIVE</span>
+            </div>
+            <div class="banner-item">
+                <div class="clive-image-container relative flex items-center justify-center ml-4 mr-3">
+                    <div class="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="h-12 w-12 object-contain rounded-full shadow-sm">
+                    </div>
+                </div>
+                <span class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mr-8">$CLIVE</span>
+            </div>
+            <div class="banner-item">
+                <div class="clive-image-container relative flex items-center justify-center ml-4 mr-3">
+                    <div class="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="h-12 w-12 object-contain rounded-full shadow-sm">
+                    </div>
+                </div>
+                <span class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mr-8">$CLIVE</span>
+            </div>
+            <div class="banner-item">
+                <div class="clive-image-container relative flex items-center justify-center ml-4 mr-3">
+                    <div class="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="h-12 w-12 object-contain rounded-full shadow-sm">
+                    </div>
+                </div>
+                <span class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mr-8">$CLIVE</span>
+            </div>
+            <div class="banner-item">
+                <div class="clive-image-container relative flex items-center justify-center ml-4 mr-3">
+                    <div class="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="h-12 w-12 object-contain rounded-full shadow-sm">
+                    </div>
+                </div>
+                <span class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mr-8">$CLIVE</span>
+            </div>
+            <div class="banner-item">
+                <div class="clive-image-container relative flex items-center justify-center ml-4 mr-3">
+                    <div class="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                        <img src="https://pfst.cf2.poecdn.net/base/image/2c9bdd194c5a00867b0f514b05e0bd337a21d67117e41a7d21ad403da595f8c9?w=500&amp;h=500" alt="Clive" class="h-12 w-12 object-contain rounded-full shadow-sm">
+                    </div>
+                </div>
+                <span class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mr-8">$CLIVE</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Custom scroll-to-section function for nav links
+        function scrollToSection(sectionId) {
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                const navbar = document.getElementById('navbar');
+                const navbarHeight = navbar.offsetHeight + 20;
+                const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY - navbarHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+                
+                // Update active state in navbar
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('bg-primary/20');
+                });
+                
+                // Find the link that was clicked and add active class
+                document.querySelector(`a[href="#${sectionId}"]`).classList.add('bg-primary/20');
+            }
+        }
+    
+        // Theme toggle functionality - set up for both mobile and desktop toggles
+        const themeToggleMobile = document.getElementById('theme-toggle');
+        const themeToggleDesktop = document.getElementById('theme-toggle-desktop');
+        
+        // Toggle theme function to keep both buttons in sync
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+        }
+        
+        // Toggle theme on button click (mobile)
+        themeToggleMobile.addEventListener('click', toggleTheme);
+        
+        // Toggle theme on button click (desktop)
+        themeToggleDesktop.addEventListener('click', toggleTheme);
+        
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.getElementById('menu-toggle');
+            const closeMenu = document.getElementById('close-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+            const navbar = document.getElementById('navbar');
+            
+            // Toggle mobile menu
+            if (menuToggle) {
+                menuToggle.addEventListener('click', () => {
+                    mobileMenu.classList.remove('translate-x-full');
+                    mobileMenu.classList.add('translate-x-0');
+                });
+            }
+            
+            // Close mobile menu
+            if (closeMenu) {
+                closeMenu.addEventListener('click', () => {
+                    mobileMenu.classList.remove('translate-x-0');
+                    mobileMenu.classList.add('translate-x-full');
+                });
+            }
+            
+            // Close menu when clicking a nav item
+            mobileNavItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    mobileMenu.classList.remove('translate-x-0');
+                    mobileMenu.classList.add('translate-x-full');
+                });
+            });
+            
+            // Improved navigation scroll functionality
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    if (targetSection) {
+                        // Get the section's position, accounting for navbar height with extra padding
+                        const navbarHeight = navbar.offsetHeight + 20; // Added padding
+                        const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY - navbarHeight;
+                        
+                        // Scroll to the section - using scrollIntoView for better compatibility
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                        
+                        // If mobile menu is open, close it
+                        if (mobileMenu && !mobileMenu.classList.contains('translate-x-full')) {
+                            mobileMenu.classList.remove('translate-x-0');
+                            mobileMenu.classList.add('translate-x-full');
+                        }
+                        
+                        // Update active state in navbar
+                        document.querySelectorAll('.nav-item').forEach(item => {
+                            item.classList.remove('bg-primary/10');
+                        });
+                        
+                        if (this.classList.contains('nav-item')) {
+                            this.classList.add('bg-primary/10');
+                        }
+                    }
+                });
+            });
+            
+            // Navbar scroll animation
+            let lastScrollTop = 0;
+            let navbarHeight = navbar.offsetHeight;
+            const scrollThreshold = 100; // Minimum scroll amount before showing/hiding
+            
+            // Add spacer equal to navbar height
+            const spacer = document.createElement('div');
+            spacer.style.height = `${navbarHeight}px`;
+            document.body.insertBefore(spacer, document.querySelector('.content-container'));
+            
+            window.addEventListener('scroll', () => {
+                let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Check if scrolled more than threshold
+                if (Math.abs(lastScrollTop - currentScroll) <= scrollThreshold) return;
+                
+                // Scrolling down & past navbar height
+                if (currentScroll > lastScrollTop && currentScroll > navbarHeight) {
+                    // Scrolling down - hide navbar with smooth animation
+                    navbar.style.transform = 'translateY(-100%)';
+                } else {
+                    // Scrolling up - show navbar with smooth animation
+                    navbar.style.transform = 'translateY(0)';
+                }
+                
+                lastScrollTop = currentScroll;
+            });
+            
+            // Highlight current section in navigation
+            const sections = document.querySelectorAll('section[id]');
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            function highlightNavItem() {
+                let scrollPosition = window.scrollY + 200;
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.offsetHeight;
+                    const sectionId = section.getAttribute('id');
+                    
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                        navItems.forEach(item => {
+                            item.classList.remove('bg-primary/10');
+                            if (item.getAttribute('href') === `#${sectionId}`) {
+                                item.classList.add('bg-primary/10');
+                            }
+                        });
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', highlightNavItem);
+            highlightNavItem(); // Highlight initial section
+        });
+
+        // Enhanced Contract address copy functionality with animations
+        const contractAddress = document.getElementById('contract-address');
+        const copyAddressBtn = document.getElementById('copy-address');
+        const copyTooltip = document.getElementById('copy-tooltip');
+        const copyIcon = document.getElementById('copy-icon');
+        const copiedIcon = document.getElementById('copied-icon');
+        
+        if (copyAddressBtn) {
+            copyAddressBtn.addEventListener('click', () => {
+                try {
+                    navigator.clipboard.writeText(contractAddress.textContent).then(() => {
+                        // Show success tooltip with animation
+                        copyTooltip.style.opacity = '1';
+                        copyTooltip.style.transform = 'translate(-50%, 0) scale(1)';
+                        
+                        // Swap icons with animation
+                        copyIcon.classList.add('hidden');
+                        copiedIcon.classList.remove('hidden');
+                        
+                        // Add success animation to the address container
+                        const addressContainer = copyAddressBtn.closest('div');
+                        addressContainer.classList.add('ring-2', 'ring-green-500');
+                        
+                        // Reset after delay
+                        setTimeout(() => {
+                            copyTooltip.style.opacity = '0';
+                            copyTooltip.style.transform = 'translate(-50%, 0) scale(0.9)';
+                            
+                            setTimeout(() => {
+                                copyIcon.classList.remove('hidden');
+                                copiedIcon.classList.add('hidden');
+                                addressContainer.classList.remove('ring-2', 'ring-green-500');
+                            }, 300);
+                        }, 2000);
+                    });
+                } catch (err) {
+                    console.error("Copy failed:", err);
+                }
+            });
+        }
+        
+        // Banner animation optimization
+        document.addEventListener('DOMContentLoaded', () => {
+            const bannerWrapper = document.querySelector('.banner-wrapper');
+            const bannerTrack = document.querySelector('.banner-track');
+            
+            if (!bannerWrapper || !bannerTrack) return;
+            
+            function optimizeBannerAnimation() {
+                const itemCount = bannerTrack.children.length / 2;
+                let totalWidth = 0;
+                
+                for (let i = 0; i < itemCount; i++) {
+                    totalWidth += bannerTrack.children[i].offsetWidth;
+                }
+                
+                const optimalDuration = Math.max(20, Math.min(40, totalWidth / 50));
+                bannerTrack.style.animationDuration = `${optimalDuration}s`;
+            }
+            
+            setTimeout(optimizeBannerAnimation, 100);
+            window.addEventListener('resize', optimizeBannerAnimation);
+        });
+        
+        // Sky Blast Game Implementation (Simplified without leaderboard)
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            const startButton = document.getElementById('startButton');
+            const restartButton = document.getElementById('restartButton');
+            const scoreElement = document.getElementById('score');
+            const highScoreElement = document.getElementById('highScore');
+            const starsElement = document.getElementById('stars');
+            const playerNameElement = document.getElementById('playerName');
+            const changeNameButton = document.getElementById('changeNameButton');
+            const nameModal = document.getElementById('nameModal');
+            const playerNameInput = document.getElementById('playerNameInput');
+            const saveNameButton = document.getElementById('saveNameButton');
+            const cancelNameButton = document.getElementById('cancelNameButton');
+            
+            // Game variables
+            let gameActive = false;
+            let score = 0;
+            let highScore = 0;
+            let starsCollected = 0;
+            let gameSpeed = 2;
+            
+            // Player variable
+            let playerName = "Player";
+            
+            // Simple local storage for high score
+            const STORAGE_KEY = 'clive_game_highscore';
+            const PLAYER_NAME_KEY = 'clive_player_name';
+            
+            // Load saved high score and player name
+            function loadSavedData() {
+                try {
+                    const savedHighScore = localStorage.getItem(STORAGE_KEY);
+                    if (savedHighScore) {
+                        highScore = parseInt(savedHighScore);
+                        highScoreElement.textContent = highScore;
+                    }
+                    
+                    const savedName = localStorage.getItem(PLAYER_NAME_KEY);
+                    if (savedName) {
+                        playerName = savedName;
+                        playerNameElement.textContent = playerName;
+                    }
+                } catch (error) {
+                    console.error('Error loading saved data:', error);
+                }
+            }
+            
+            // Save high score
+            function saveHighScore() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, highScore.toString());
+                } catch (error) {
+                    console.error('Error saving high score:', error);
+                }
+            }
+            
+            // Save player name
+            function savePlayerNameToStorage() {
+                try {
+                    localStorage.setItem(PLAYER_NAME_KEY, playerName);
+                } catch (error) {
+                    console.error('Error saving player name:', error);
+                }
+            }
+            
+            // Player balloon with increased size
+            const balloon = {
+                x: canvas.width / 2,
+                y: canvas.height - 100,
+                width: 85,  // Increased from 60
+                height: 110, // Increased from 80
+                speed: 5,
+                dx: 0
+            };
+            
+            // Stars to collect
+            const stars = [];
+            
+            // Obstacles (clouds)
+            const obstacles = [];
+            
+            // Controls state
+            const keys = {
+                ArrowLeft: false,
+                ArrowRight: false
+            };
+            
+            // Touch controls
+            let touchX = 0;
+            
+            // Load and store game assets
+            const balloonImage = new Image();
+            balloonImage.src = 'https://pfst.cf2.poecdn.net/base/image/8362e5b99e2336274cb8bc21de4a7a258a52b2021c882b179db7e9763372db35';
+            
+            const cloudImage = new Image();
+            cloudImage.src = 'https://pfst.cf2.poecdn.net/base/image/ddd643b1950fd813ec9c85e351732c97e6e2f8ee4583bdc02f6a892310a5e6d4?w=1290&h=858';
+            
+            // Draw balloon
+            function drawBalloon() {
+                ctx.drawImage(balloonImage, balloon.x - balloon.width / 2, balloon.y - balloon.height / 2, balloon.width, balloon.height);
+            }
+            
+            // Draw star
+            function drawStar(star) {
+                ctx.save();
+                ctx.fillStyle = star.color;
+                ctx.beginPath();
+                for (let i = 0; i < 5; i++) {
+                    ctx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * star.outerRadius + star.x,
+                              Math.sin((18 + i * 72) * Math.PI / 180) * star.outerRadius + star.y);
+                    ctx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * star.innerRadius + star.x,
+                              Math.sin((54 + i * 72) * Math.PI / 180) * star.innerRadius + star.y);
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+            
+            // Draw obstacle
+            function drawObstacle(obstacle) {
+                ctx.drawImage(cloudImage, obstacle.x - obstacle.width / 2, obstacle.y - obstacle.height / 2, obstacle.width, obstacle.height);
+            }
+            
+            // Create stars randomly
+            function createStar() {
+                if (Math.random() < 0.02) {
+                    const star = {
+                        x: Math.random() * canvas.width,
+                        y: -30,
+                        innerRadius: 5,
+                        outerRadius: 10,
+                        color: '#FFD700',
+                        speed: gameSpeed + Math.random() * 2
+                    };
+                    stars.push(star);
+                }
+            }
+            
+            // Create obstacles randomly
+            function createObstacle() {
+                if (Math.random() < 0.01) {
+                    const obstacle = {
+                        x: Math.random() * canvas.width,
+                        y: -50,
+                        width: 80 + Math.random() * 40,
+                        height: 50 + Math.random() * 30,
+                        speed: gameSpeed + Math.random()
+                    };
+                    obstacles.push(obstacle);
+                }
+            }
+            
+            // Update game objects
+            function update() {
+                // Move balloon based on controls
+                balloon.x += balloon.dx;
+                
+                // Keep balloon within canvas bounds
+                if (balloon.x < balloon.width / 2) {
+                    balloon.x = balloon.width / 2;
+                }
+                if (balloon.x > canvas.width - balloon.width / 2) {
+                    balloon.x = canvas.width - balloon.width / 2;
+                }
+                
+                // Create new stars and obstacles
+                createStar();
+                createObstacle();
+                
+                // Update stars
+                for (let i = 0; i < stars.length; i++) {
+                    stars[i].y += stars[i].speed;
+                    
+                    // Check for collision with balloon
+                    const dx = stars[i].x - balloon.x;
+                    const dy = stars[i].y - balloon.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < stars[i].outerRadius + Math.min(balloon.width, balloon.height) / 3) {
+                        // Star collected
+                        stars.splice(i, 1);
+                        score += 10;
+                        starsCollected++;
+                        scoreElement.textContent = score;
+                        starsElement.textContent = starsCollected;
+                        i--;
+                        continue;
+                    }
+                    
+                    // Remove stars that are off-screen
+                    if (stars[i].y > canvas.height + stars[i].outerRadius) {
+                        stars.splice(i, 1);
+                        i--;
+                    }
+                }
+                
+                // Update obstacles
+                for (let i = 0; i < obstacles.length; i++) {
+                    obstacles[i].y += obstacles[i].speed;
+                    
+                    // Check for collision with balloon
+                    if (
+                        balloon.x + balloon.width / 3 > obstacles[i].x - obstacles[i].width / 2 &&
+                        balloon.x - balloon.width / 3 < obstacles[i].x + obstacles[i].width / 2 &&
+                        balloon.y + balloon.height / 3 > obstacles[i].y - obstacles[i].height / 2 &&
+                        balloon.y - balloon.height / 3 < obstacles[i].y + obstacles[i].height / 2
+                    ) {
+                        // Collision detected, game over
+                        gameOver();
+                        return;
+                    }
+                    
+                    // Remove obstacles that are off-screen
+                    if (obstacles[i].y > canvas.height + obstacles[i].height) {
+                        obstacles.splice(i, 1);
+                        i--;
+                        
+                        // Increment score for each obstacle passed
+                        score++;
+                        scoreElement.textContent = score;
+                    }
+                }
+                
+                // Increase game speed over time
+                gameSpeed += 0.001;
+            }
+            
+            // Draw game
+            function draw() {
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw background (gradient sky)
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                if (document.documentElement.classList.contains('dark')) {
+                    gradient.addColorStop(0, '#1a237e');
+                    gradient.addColorStop(1, '#3949ab');
+                } else {
+                    gradient.addColorStop(0, '#64b5f6');
+                    gradient.addColorStop(1, '#bbdefb');
+                }
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw stars
+                stars.forEach(drawStar);
+                
+                // Draw obstacles
+                obstacles.forEach(drawObstacle);
+                
+                // Draw balloon
+                drawBalloon();
+            }
+            
+            // Game loop
+            function gameLoop() {
+                if (!gameActive) return;
+                
+                update();
+                draw();
+                
+                requestAnimationFrame(gameLoop);
+            }
+            
+            // Handle keyboard controls
+            function handleKeyDown(e) {
+                if (e.key === 'ArrowLeft') {
+                    keys.ArrowLeft = true;
+                    balloon.dx = -balloon.speed;
+                }
+                if (e.key === 'ArrowRight') {
+                    keys.ArrowRight = true;
+                    balloon.dx = balloon.speed;
+                }
+            }
+            
+            function handleKeyUp(e) {
+                if (e.key === 'ArrowLeft') {
+                    keys.ArrowLeft = false;
+                    if (keys.ArrowRight) {
+                        balloon.dx = balloon.speed;
+                    } else {
+                        balloon.dx = 0;
+                    }
+                }
+                if (e.key === 'ArrowRight') {
+                    keys.ArrowRight = false;
+                    if (keys.ArrowLeft) {
+                        balloon.dx = -balloon.speed;
+                    } else {
+                        balloon.dx = 0;
+                    }
+                }
+            }
+            
+            // Mobile touch controls - improved with swipe detection
+            let touchStartX = 0;
+            let isTouching = false;
+            
+            function handleTouchStart(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                touchStartX = touch.clientX;
+                isTouching = true;
+                
+                // Get initial position for reference
+                touchX = touchStartX;
+            }
+            
+            function handleTouchEnd() {
+                isTouching = false;
+                balloon.dx = 0; // Stop balloon movement when touch ends
+            }
+            
+            function handleTouchMove(e) {
+                e.preventDefault();
+                if (!isTouching) return;
+                
+                const touch = e.touches[0];
+                const currentX = touch.clientX;
+                const diffX = currentX - touchX;
+                
+                // Update the reference position for next move
+                touchX = currentX;
+                
+                // Move balloon proportionally to swipe movement
+                // If swipe is leftward (negative diffX), move left
+                // If swipe is rightward (positive diffX), move right
+                if (diffX < 0) {
+                    balloon.dx = -balloon.speed;
+                } else if (diffX > 0) {
+                    balloon.dx = balloon.speed;
+                } else {
+                    balloon.dx = 0;
+                }
+            }
+            
+            // Handle mouse controls
+            function handleMouseDown(e) {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                
+                if (mouseX < canvas.width / 2) {
+                    balloon.dx = -balloon.speed;
+                } else {
+                    balloon.dx = balloon.speed;
+                }
+            }
+            
+            function handleMouseUp() {
+                balloon.dx = 0;
+            }
+            
+            // Reset game state
+            function resetGame() {
+                gameActive = true;
+                score = 0;
+                starsCollected = 0;
+                gameSpeed = 2;
+                balloon.x = canvas.width / 2;
+                balloon.y = canvas.height - 100;
+                balloon.dx = 0;
+                stars.length = 0;
+                obstacles.length = 0;
+                
+                scoreElement.textContent = score;
+                starsElement.textContent = starsCollected;
+                
+                startButton.disabled = true;
+                restartButton.disabled = false;
+                
+                gameLoop();
+            }
+            
+            // Game over
+            function gameOver() {
+                gameActive = false;
+                
+                if (score > highScore) {
+                    highScore = score;
+                    highScoreElement.textContent = highScore;
+                    saveHighScore();
+                    
+                    // Show a high score notification
+                    showHighScoreNotification();
+                }
+                
+                startButton.disabled = false;
+                restartButton.disabled = false;
+                shareScoreButton.disabled = false; // Enable share button after game over
+            }
+            
+            // Score Card Functionality
+            const shareScoreButton = document.getElementById('shareScoreButton');
+            const scoreCardModal = document.getElementById('scoreCardModal');
+            const closeScoreCard = document.getElementById('closeScoreCard');
+            const downloadScoreCard = document.getElementById('downloadScoreCard');
+            const scoreCardPlayerName = document.getElementById('scoreCardPlayerName');
+            const scoreCardScore = document.getElementById('scoreCardScore');
+            const scoreCardStars = document.getElementById('scoreCardStars');
+            const scoreCardHighScore = document.getElementById('scoreCardHighScore');
+            const scoreCardDate = document.getElementById('scoreCardDate');
+            
+            // Show Score Card Modal
+            function showScoreCard() {
+                // Update score card data
+                scoreCardPlayerName.textContent = playerName;
+                scoreCardScore.textContent = score;
+                scoreCardStars.textContent = starsCollected;
+                scoreCardHighScore.textContent = highScore;
+                
+                // Update date
+                const now = new Date();
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                scoreCardDate.textContent = now.toLocaleDateString(undefined, options);
+                
+                // Show modal
+                scoreCardModal.classList.add('active');
+            }
+            
+            // Hide Score Card Modal
+            function hideScoreCard() {
+                scoreCardModal.classList.remove('active');
+            }
+            
+            // Copy score card as image to clipboard
+            function copyScoreCardToClipboard() {
+                // Get the button and success message elements
+                const copyButton = document.getElementById('copyScoreCard');
+                const copyButtonText = document.getElementById('copyButtonText');
+                const copySuccessMessage = document.getElementById('copySuccessMessage');
+                
+                // Update button text to show processing
+                copyButtonText.textContent = "Processing...";
+                
+                try {
+                    // Get a reference to the actual score card element
+                    const scoreCard = document.querySelector('.score-card');
+                    
+                    // Use html2canvas library to render the score card to a canvas
+                    // First, we need to dynamically load the library
+                    const script = document.createElement('script');
+                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                    script.onload = function() {
+                        // Now that the library is loaded, use it to create a canvas from the score card
+                        html2canvas(scoreCard, {
+                            backgroundColor: null,
+                            scale: 2, // Render at higher resolution
+                            logging: false,
+                            useCORS: true
+                        }).then(canvas => {
+                            // Get the canvas as a blob
+                            canvas.toBlob(async function(blob) {
+                                try {
+                                    // Try to write the image to clipboard
+                                    if (navigator.clipboard && navigator.clipboard.write) {
+                                        const clipboardItem = new ClipboardItem({ 'image/png': blob });
+                                        await navigator.clipboard.write([clipboardItem]);
+                                        
+                                        // Show success
+                                        copyButtonText.textContent = "Copied!";
+                                        copySuccessMessage.style.opacity = "1";
+                                        
+                                        // Reset after delay
+                                        setTimeout(() => {
+                                            copyButtonText.textContent = "Copy to Clipboard";
+                                            copySuccessMessage.style.opacity = "0";
+                                        }, 2000);
+                                    } else {
+                                        // Fallback for browsers without clipboard.write API
+                                        throw new Error("Clipboard API not supported");
+                                    }
+                                } catch (err) {
+                                    console.error('Failed to copy score card image:', err);
+                                    
+                                    // Try text fallback if image copy fails
+                                    const scoreCardText = 
+`🎮 $CLIVE Sky Blast Score Card 🎮
+───────────────────────
+👤 Player: ${playerName}
+📊 Score: ${score}
+⭐ Stars: ${starsCollected}
+🏆 High Score: ${highScore}
+───────────────────────
+🗓️ ${scoreCardDate.textContent}
+$CLIVE Sky Blast Game`;
+                                    
+                                    navigator.clipboard.writeText(scoreCardText).then(() => {
+                                        copyButtonText.textContent = "Text Copied";
+                                        copySuccessMessage.textContent = "Text version copied (image copy failed)";
+                                        copySuccessMessage.style.opacity = "1";
+                                        
+                                        setTimeout(() => {
+                                            copyButtonText.textContent = "Copy to Clipboard";
+                                            copySuccessMessage.textContent = "Score card copied to clipboard!";
+                                            copySuccessMessage.style.opacity = "0";
+                                        }, 3000);
+                                    });
+                                }
+                            }, 'image/png', 1.0);
+                        }).catch(err => {
+                            console.error("Error converting to canvas:", err);
+                            fallbackToTextCopy();
+                        });
+                    };
+                    
+                    script.onerror = fallbackToTextCopy;
+                    document.head.appendChild(script);
+                    
+                } catch (err) {
+                    console.error('Failed to initialize image copy:', err);
+                    fallbackToTextCopy();
+                }
+                
+                // Text fallback function
+                function fallbackToTextCopy() {
+                    const scoreCardText = 
+`🎮 $CLIVE Sky Blast Score Card 🎮
+───────────────────────
+👤 Player: ${playerName}
+📊 Score: ${score}
+⭐ Stars: ${starsCollected}
+🏆 High Score: ${highScore}
+───────────────────────
+🗓️ ${scoreCardDate.textContent}
+$CLIVE Sky Blast Game`;
+                    
+                    navigator.clipboard.writeText(scoreCardText).then(() => {
+                        copyButtonText.textContent = "Text Copied";
+                        copySuccessMessage.textContent = "Text version copied (image copy failed)";
+                        copySuccessMessage.style.opacity = "1";
+                        
+                        setTimeout(() => {
+                            copyButtonText.textContent = "Copy to Clipboard";
+                            copySuccessMessage.textContent = "Score card copied to clipboard!";
+                            copySuccessMessage.style.opacity = "0";
+                        }, 3000);
+                    }).catch(err => {
+                        console.error("Even text copy failed:", err);
+                        copyButtonText.textContent = "Copy Failed";
+                        setTimeout(() => {
+                            copyButtonText.textContent = "Copy to Clipboard";
+                        }, 2000);
+                    });
+                }
+            }
+            
+            // Event listeners for score card functionality
+            shareScoreButton.addEventListener('click', showScoreCard);
+            closeScoreCard.addEventListener('click', hideScoreCard);
+            document.getElementById('copyScoreCard').addEventListener('click', copyScoreCardToClipboard);
+            
+            // Show notification for new high score
+            function showHighScoreNotification() {
+                // Create the notification element
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-16 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-primary to-secondary text-white py-3 px-6 rounded-lg shadow-lg z-[9999] text-center opacity-0 transition-opacity duration-500';
+                notification.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <div>
+                            <div class="font-bold text-lg">New High Score!</div>
+                            <div>You achieved a score of ${highScore}</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add to the DOM
+                document.body.appendChild(notification);
+                
+                // Animate in
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                }, 100);
+                
+                // Remove after delay
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 500);
+                }, 4000);
+            }
+            
+            // Show the name modal
+            function showNameModal() {
+                // Pre-fill the input with the current player name
+                playerNameInput.value = playerName === 'Player' ? '' : playerName;
+                
+                // Show the modal
+                nameModal.classList.remove('opacity-0', 'pointer-events-none');
+                nameModal.classList.add('opacity-100');
+                nameModal.querySelector('div').classList.remove('scale-95');
+                nameModal.querySelector('div').classList.add('scale-100');
+                
+                // Focus the input
+                setTimeout(() => {
+                    playerNameInput.focus();
+                }, 300);
+            }
+            
+            // Hide the name modal
+            function hideNameModal() {
+                nameModal.classList.remove('opacity-100');
+                nameModal.classList.add('opacity-0', 'pointer-events-none');
+                nameModal.querySelector('div').classList.remove('scale-100');
+                nameModal.querySelector('div').classList.add('scale-95');
+            }
+            
+            // Save the player name
+            function savePlayerName() {
+                const newName = playerNameInput.value.trim();
+                
+                if (newName) {
+                    playerName = newName.length > 15 ? newName.substring(0, 15) : newName;
+                } else {
+                    playerName = 'Player';
+                }
+                
+                // Update the player name display
+                playerNameElement.textContent = playerName;
+                
+                // Save to storage
+                savePlayerNameToStorage();
+                
+                // Hide the modal
+                hideNameModal();
+            }
+            
+            // Initialize game
+            function initGame() {
+                // Register event listeners
+                document.addEventListener('keydown', handleKeyDown);
+                document.addEventListener('keyup', handleKeyUp);
+                
+                canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+                canvas.addEventListener('touchend', handleTouchEnd);
+                canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+                
+                canvas.addEventListener('mousedown', handleMouseDown);
+                canvas.addEventListener('mouseup', handleMouseUp);
+                canvas.addEventListener('mouseleave', handleMouseUp);
+                
+                startButton.addEventListener('click', resetGame);
+                restartButton.addEventListener('click', resetGame);
+                
+                // Player name modal event listeners
+                changeNameButton.addEventListener('click', showNameModal);
+                saveNameButton.addEventListener('click', savePlayerName);
+                cancelNameButton.addEventListener('click', hideNameModal);
+                
+                // Allow pressing Enter to save the name
+                playerNameInput.addEventListener('keydown', e => {
+                    if (e.key === 'Enter') {
+                        savePlayerName();
+                    }
+                });
+                
+                // Load saved data
+                loadSavedData();
+                
+                // No automatic prompt when loading the page
+                // The name modal will only appear when the Change Name button is clicked
+                
+                // Draw initial scene
+                draw();
+            }
+            
+            // Start the game initialization once images are loaded
+            Promise.all([
+                new Promise(resolve => {
+                    balloonImage.onload = resolve;
+                    balloonImage.onerror = resolve; // Handle loading error gracefully
+                }),
+                new Promise(resolve => {
+                    cloudImage.onload = resolve;
+                    cloudImage.onerror = resolve;
+                })
+            ]).then(() => {
+                initGame();
+            });
+        });
+    </script>
+
+
+</body></html>
